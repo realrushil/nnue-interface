@@ -46,6 +46,17 @@ target_include_directories(nnue_interface PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src/nnue
 )
 
+# Disable neural network embedding to avoid INCBIN issues
+# This makes the code load neural networks from files instead
+target_compile_definitions(nnue_interface PRIVATE NNUE_EMBEDDING_OFF)
+
+# Detect architecture
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "arm64|aarch64")
+    set(IS_ARM64 TRUE)
+elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|amd64")
+    set(IS_X86_64 TRUE)
+endif()
+
 # Compiler flags for optimization
 if(MSVC)
     # Windows (MSVC)
@@ -55,19 +66,38 @@ if(MSVC)
         /DUSE_SSE41 /DUSE_SSSE3 /DUSE_SSE2 /DUSE_POPCNT
     )
 else()
-    # Linux, macOS, MinGW, etc.
+    # Common flags for all Unix-like systems
     target_compile_options(nnue_interface PRIVATE
         -O3 -DNDEBUG -DIS_64BIT
-        -DUSE_AVX2 -mavx2 -mbmi
-        -DUSE_SSE41 -msse4.1
-        -DUSE_SSSE3 -mssse3
-        -DUSE_SSE2 -msse2
-        -DUSE_POPCNT -mpopcnt
-        -msse -m64
         -funroll-loops
         -Wall -Wextra -Wshadow
         -fexceptions
     )
+    
+    # Architecture-specific SIMD flags
+    if(IS_X86_64)
+        # x86-64 SIMD instructions
+        target_compile_options(nnue_interface PRIVATE
+            -DUSE_AVX2 -mavx2 -mbmi
+            -DUSE_SSE41 -msse4.1
+            -DUSE_SSSE3 -mssse3
+            -DUSE_SSE2 -msse2
+            -DUSE_POPCNT -mpopcnt
+            -msse -m64
+        )
+    elseif(IS_ARM64)
+        # ARM64 - no x86 SIMD instructions
+        # Use ARM NEON if available (optional)
+        target_compile_options(nnue_interface PRIVATE
+            -DUSE_POPCNT
+        )
+    else()
+        # Generic 64-bit fallback
+        target_compile_options(nnue_interface PRIVATE
+            -DUSE_POPCNT
+            -m64
+        )
+    endif()
     
     # Add pthread for multithreading
     if(UNIX AND NOT APPLE)
@@ -77,5 +107,11 @@ endif()
 
 # Set optimization level
 if(NOT MSVC)
-    target_compile_options(nnue_interface PRIVATE -march=native)
+    if(IS_ARM64)
+        # For ARM64, use generic optimization instead of -march=native
+        # to avoid potential issues with unsupported instruction sets
+        target_compile_options(nnue_interface PRIVATE -O3)
+    else()
+        target_compile_options(nnue_interface PRIVATE -march=native)
+    endif()
 endif()
