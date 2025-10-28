@@ -202,14 +202,14 @@ ext_modules = [
 
 setup(
     name='nnue-interface',
-    version='0.2.1',
+    version='0.2.2',
     author='Rushil Saraf',
     description='Python bindings for Stockfish NNUE neural network',
     long_description='Extract NNUE activations and evaluations from Stockfish chess engine',
-    packages=['src'],
-    package_dir={'src': 'src'},
+    packages=['nnue_interface'],
+    package_dir={'nnue_interface': 'src'},
     ext_modules=ext_modules,
-    ext_package='src',
+    ext_package='nnue_interface',
     install_requires=['pybind11>=2.6.0', 'numpy>=1.19.0'],
     setup_requires=['pybind11>=2.6.0'],
     python_requires='>=3.8',
