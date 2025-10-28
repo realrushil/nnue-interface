@@ -4,7 +4,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "nnue-interface"
-version = "0.2.2"
+version = "0.2.5"
 description = "Python bindings for extracting Stockfish NNUE neural network activations and evaluations"
 authors = [{ name = "Rushil Saraf", email = "rsaraf@berkeley.edu" }]
 requires-python = ">=3.8"
@@ -23,6 +23,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Games/Entertainment :: Board Games",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
