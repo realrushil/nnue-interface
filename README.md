@@ -264,7 +264,7 @@ python -c "import struct; print('64-bit' if struct.calcsize('P') == 8 else '32-b
 ## Authors
 
 - Created with Stockfish source code
-- Python bindings by [Your Name]
+- Python bindings by Rushil Saraf
 
 ---
 
