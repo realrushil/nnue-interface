@@ -1,0 +1,166 @@
+"""
+Setup file for building Stockfish NNUE Python bindings
+"""
+
+from setuptools import setup, Extension
+from setuptools.command.build_ext import build_ext
+import sys
+import os
+import platform
+
+class get_pybind_include(object):
+    """Helper class to determine the pybind11 include path"""
+    def __str__(self):
+        import pybind11
+        return pybind11.get_include()
+
+# Source files for the extension
+sources = [
+    'src/stockfish_nnue_bindings.cpp',
+    'src/benchmark.cpp',
+    'src/bitboard.cpp',
+    'src/evaluate.cpp',
+    'src/memory.cpp',
+    'src/misc.cpp',
+    'src/movegen.cpp',
+    'src/movepick.cpp',
+    'src/position.cpp',
+    'src/search.cpp',
+    'src/thread.cpp',
+    'src/timeman.cpp',
+    'src/tt.cpp',
+    'src/uci.cpp',
+    'src/ucioption.cpp',
+    'src/tune.cpp',
+    'src/syzygy/tbprobe.cpp',
+    'src/nnue/nnue_accumulator.cpp',
+    'src/nnue/nnue_misc.cpp',
+    'src/nnue/features/half_ka_v2_hm.cpp',
+    'src/nnue/network.cpp',
+    'src/engine.cpp',
+    'src/score.cpp',
+]
+
+# Compiler flags
+extra_compile_args = []
+extra_link_args = []
+
+if platform.system() == 'Windows':
+    # Force GCC/MinGW flags for MSYS2 UCRT64
+    extra_compile_args = [
+        '-std=c++17',
+        '-O3',
+        '-DNDEBUG',
+        '-DIS_64BIT',
+        '-DUSE_PTHREADS',
+        '-DUSE_AVX2',
+        '-mavx2',
+        '-mbmi',
+        '-DUSE_SSE41',
+        '-msse4.1',
+        '-DUSE_SSSE3',
+        '-mssse3',
+        '-DUSE_SSE2',
+        '-msse2',
+        '-DUSE_POPCNT',
+        '-msse3',
+        '-mpopcnt',
+        '-msse',
+        '-m64',
+        '-funroll-loops',
+        '-Wall',
+        '-Wcast-qual',
+        '-fexceptions',
+        '-pedantic',
+        '-Wextra',
+        '-Wshadow',
+        '-Wmissing-declarations',
+    ]
+    extra_link_args = ['-lpthread']
+elif platform.system() == 'Darwin':
+    # macOS-specific flags
+    extra_compile_args = [
+        '-std=c++17',
+        '-O3',
+        '-DNDEBUG',
+        '-DIS_64BIT',
+        '-DUSE_PTHREADS',
+        '-DUSE_AVX2',
+        '-mavx2',
+        '-mbmi',
+        '-DUSE_SSE41',
+        '-msse4.1',
+        '-DUSE_SSSE3',
+        '-mssse3',
+        '-DUSE_SSE2',
+        '-msse2',
+        '-DUSE_POPCNT',
+        '-msse3',
+        '-mpopcnt',
+        '-msse',
+        '-m64',
+        '-funroll-loops',
+        '-mmacosx-version-min=10.15',
+    ]
+    extra_link_args = ['-lpthread', '-mmacosx-version-min=10.15']
+else:
+    # Linux-specific flags
+    extra_compile_args = [
+        '-std=c++17',
+        '-O3',
+        '-DNDEBUG',
+        '-DIS_64BIT',
+        '-DUSE_PTHREADS',
+        '-DUSE_AVX2',
+        '-mavx2',
+        '-mbmi',
+        '-DUSE_SSE41',
+        '-msse4.1',
+        '-DUSE_SSSE3',
+        '-mssse3',
+        '-DUSE_SSE2',
+        '-msse2',
+        '-DUSE_POPCNT',
+        '-msse3',
+        '-mpopcnt',
+        '-msse',
+        '-m64',
+        '-funroll-loops',
+        '-Wall',
+        '-Wcast-qual',
+        '-fexceptions',
+        '-pedantic',
+        '-Wextra',
+        '-Wshadow',
+        '-Wmissing-declarations',
+    ]
+    extra_link_args = ['-lpthread']
+
+ext_modules = [
+    Extension(
+        'stockfish_nnue',
+        sources=sources,
+        include_dirs=[
+            get_pybind_include(),
+            'src',
+            'src/nnue',
+        ],
+        language='c++',
+        extra_compile_args=extra_compile_args,
+        extra_link_args=extra_link_args,
+    ),
+]
+
+setup(
+    name='stockfish-nnue',
+    version='0.1.0',
+    author='Stockfish Contributors',
+    description='Python bindings for Stockfish NNUE neural network',
+    long_description='Extract NNUE activations and evaluations from Stockfish chess engine',
+    ext_modules=ext_modules,
+    install_requires=['pybind11>=2.6.0', 'numpy>=1.19.0'],
+    setup_requires=['pybind11>=2.6.0'],
+    python_requires='>=3.7',
+    zip_safe=False,
+)
+

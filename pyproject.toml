@@ -1,0 +1,40 @@
+[build-system]
+requires = ["scikit-build-core", "pybind11"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "nnue-interface"
+version = "0.1.0"
+description = "Python bindings for extracting Stockfish NNUE neural network activations and evaluations"
+authors = [{ name = "Your Name", email = "you@example.com" }]
+requires-python = ">=3.8"
+readme = "README.md"
+license = { text = "GPL-3.0-or-later" }
+keywords = ["chess", "nnue", "stockfish", "neural-network", "machine-learning"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Games/Entertainment :: Board Games",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = ["numpy>=1.19.0"]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/nnue-interface"
+Documentation = "https://github.com/yourusername/nnue-interface#readme"
+Repository = "https://github.com/yourusername/nnue-interface.git"
+Issues = "https://github.com/yourusername/nnue-interface/issues"
+
+[tool.scikit-build]
+cmake.minimum-version = "3.15"
+cmake.build-type = "Release"
+

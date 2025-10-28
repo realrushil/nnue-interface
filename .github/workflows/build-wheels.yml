@@ -1,0 +1,70 @@
+name: Build and publish wheels
+
+on:
+  push:
+    tags:
+      - 'v*'
+  pull_request:
+    paths:
+      - '.github/workflows/build-wheels.yml'
+  workflow_dispatch:
+
+jobs:
+  build_wheels:
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install scikit-build-core cmake ninja pybind11 numpy
+
+    - name: Build wheel (Linux/macOS)
+      if: runner.os != 'Windows'
+      run: |
+        pip wheel . -w ./wheelhouse --no-build-isolation
+
+    - name: Build wheel (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        pip wheel . -w ./wheelhouse --no-build-isolation
+
+    - name: Upload wheels
+      uses: actions/upload-artifact@v3
+      with:
+        name: wheels-${{ matrix.os }}-py${{ matrix.python-version }}
+        path: ./wheelhouse/*.whl
+
+  publish:
+    name: Publish to PyPI
+    needs: build_wheels
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+    - uses: actions/download-artifact@v3
+      with:
+        path: dist
+
+    - name: Flatten dist directory
+      run: |
+        mkdir -p flat_dist
+        find dist -name "*.whl" -exec mv {} flat_dist/ \;
+        mv flat_dist dist
+
+    - name: Publish to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        password: ${{ secrets.PYPI_API_TOKEN }}
