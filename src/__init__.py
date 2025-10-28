@@ -89,3 +89,4 @@ except ImportError as e:
     print(f"Warning: Failed to import stockfish_nnue C++ extension: {e}", file=sys.stderr)
     raise
 
+

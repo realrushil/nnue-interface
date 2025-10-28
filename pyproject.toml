@@ -4,9 +4,9 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "nnue-interface"
-version = "0.1.0"
+version = "0.1.1"
 description = "Python bindings for extracting Stockfish NNUE neural network activations and evaluations"
-authors = [{ name = "Your Name", email = "you@example.com" }]
+authors = [{ name = "Rushil Saraf", email = "rsaraf@berkeley.edu" }]
 requires-python = ">=3.8"
 readme = "README.md"
 license = { text = "GPL-3.0-or-later" }
@@ -29,10 +29,10 @@ classifiers = [
 dependencies = ["numpy>=1.19.0"]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/nnue-interface"
-Documentation = "https://github.com/yourusername/nnue-interface#readme"
-Repository = "https://github.com/yourusername/nnue-interface.git"
-Issues = "https://github.com/yourusername/nnue-interface/issues"
+Homepage = "https://github.com/realrushil/nnue-interface"
+Documentation = "https://github.com/realrushil/nnue-interface#readme"
+Repository = "https://github.com/realrushil/nnue-interface.git"
+Issues = "https://github.com/realrushil/nnue-interface/issues"
 
 [tool.scikit-build]
 cmake.minimum-version = "3.15"
