@@ -57,6 +57,8 @@ jobs:
     - name: Build wheel
       run: |
         python setup.py bdist_wheel
+      env:
+        ARCHFLAGS: "-arch x86_64"
 
     - name: Upload wheels
       uses: actions/upload-artifact@v4
@@ -87,6 +89,8 @@ jobs:
     - name: Build wheel
       run: |
         python setup.py bdist_wheel
+      env:
+        ARCHFLAGS: "-arch arm64"
 
     - name: Upload wheels
       uses: actions/upload-artifact@v4
