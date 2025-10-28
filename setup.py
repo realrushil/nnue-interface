@@ -59,12 +59,12 @@ if platform.system() == 'Windows':
     # Check if MSVC or MinGW/GCC
     if is_msvc():
         # MSVC flags (Visual Studio compiler)
+        # Note: Don't use USE_PTHREADS on Windows, it uses native threading
         extra_compile_args = [
             '/std:c++17',
             '/O2',
             '/DNDEBUG',
             '/DIS_64BIT',
-            '/DUSE_PTHREADS',
             '/DUSE_AVX2',
             '/arch:AVX2',
             '/DUSE_SSE41',
