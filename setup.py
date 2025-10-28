@@ -60,6 +60,7 @@ if platform.system() == 'Windows':
     if is_msvc():
         # MSVC flags (Visual Studio compiler)
         extra_compile_args = [
+            '/std:c++17',
             '/O2',
             '/DNDEBUG',
             '/DIS_64BIT',
