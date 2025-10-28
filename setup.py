@@ -14,6 +14,16 @@ class get_pybind_include(object):
         import pybind11
         return pybind11.get_include()
 
+# Detect if using MSVC
+def is_msvc():
+    """Check if we're using MSVC compiler"""
+    # On Windows, check if MSVC is the compiler
+    if platform.system() == 'Windows':
+        # setuptools uses MSVC on Windows by default unless MinGW is configured
+        # We can check by looking at the environment
+        return os.environ.get('DISTUTILS_USE_SDK') != '1'
+    return False
+
 # Source files for the extension
 sources = [
     'src/stockfish_nnue_bindings.cpp',
@@ -46,37 +56,55 @@ extra_compile_args = []
 extra_link_args = []
 
 if platform.system() == 'Windows':
-    # Force GCC/MinGW flags for MSYS2 UCRT64
-    extra_compile_args = [
-        '-std=c++17',
-        '-O3',
-        '-DNDEBUG',
-        '-DIS_64BIT',
-        '-DUSE_PTHREADS',
-        '-DUSE_AVX2',
-        '-mavx2',
-        '-mbmi',
-        '-DUSE_SSE41',
-        '-msse4.1',
-        '-DUSE_SSSE3',
-        '-mssse3',
-        '-DUSE_SSE2',
-        '-msse2',
-        '-DUSE_POPCNT',
-        '-msse3',
-        '-mpopcnt',
-        '-msse',
-        '-m64',
-        '-funroll-loops',
-        '-Wall',
-        '-Wcast-qual',
-        '-fexceptions',
-        '-pedantic',
-        '-Wextra',
-        '-Wshadow',
-        '-Wmissing-declarations',
-    ]
-    extra_link_args = ['-lpthread']
+    # Check if MSVC or MinGW/GCC
+    if is_msvc():
+        # MSVC flags (Visual Studio compiler)
+        extra_compile_args = [
+            '/O2',
+            '/DNDEBUG',
+            '/DIS_64BIT',
+            '/DUSE_PTHREADS',
+            '/DUSE_AVX2',
+            '/arch:AVX2',
+            '/DUSE_SSE41',
+            '/DUSE_SSSE3',
+            '/DUSE_SSE2',
+            '/DUSE_POPCNT',
+            '/EHsc',  # Enable C++ exceptions
+        ]
+        extra_link_args = []
+    else:
+        # GCC/MinGW flags for MSYS2 UCRT64
+        extra_compile_args = [
+            '-std=c++17',
+            '-O3',
+            '-DNDEBUG',
+            '-DIS_64BIT',
+            '-DUSE_PTHREADS',
+            '-DUSE_AVX2',
+            '-mavx2',
+            '-mbmi',
+            '-DUSE_SSE41',
+            '-msse4.1',
+            '-DUSE_SSSE3',
+            '-mssse3',
+            '-DUSE_SSE2',
+            '-msse2',
+            '-DUSE_POPCNT',
+            '-msse3',
+            '-mpopcnt',
+            '-msse',
+            '-m64',
+            '-funroll-loops',
+            '-Wall',
+            '-Wcast-qual',
+            '-fexceptions',
+            '-pedantic',
+            '-Wextra',
+            '-Wshadow',
+            '-Wmissing-declarations',
+        ]
+        extra_link_args = ['-lpthread']
 elif platform.system() == 'Darwin':
     # macOS-specific flags
     # Detect if we're building for ARM64 (Apple Silicon)
