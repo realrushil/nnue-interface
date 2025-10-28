@@ -1,0 +1,11 @@
+# Include source files
+recursive-include src *.cpp *.h
+
+# Exclude NNUE network files (will be downloaded at runtime)
+global-exclude *.nnue
+
+# Include other necessary files
+include README.md
+include LICENSE
+include pyproject.toml
+

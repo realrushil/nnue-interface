@@ -314,6 +314,14 @@ void Network<Arch, Transformer>::load_user_net(const std::string& dir,
 
 template<typename Arch, typename Transformer>
 void Network<Arch, Transformer>::load_internal() {
+#if defined(NNUE_EMBEDDING_OFF)
+    // Load from file instead of embedded data
+    // Check NNUE_DIR environment variable first, then fallback to current directory
+    const char* nnue_dir_env = std::getenv("NNUE_DIR");
+    std::string nnue_dir = nnue_dir_env ? std::string(nnue_dir_env) + "/" : "";
+    
+    load_user_net(nnue_dir, evalFile.defaultName);
+#else
     // C++ way to prepare a buffer for a memory stream
     class MemoryBuffer: public std::basic_streambuf<char> {
        public:
@@ -336,6 +344,7 @@ void Network<Arch, Transformer>::load_internal() {
         evalFile.current        = evalFile.defaultName;
         evalFile.netDescription = description.value();
     }
+#endif
 }
 
 

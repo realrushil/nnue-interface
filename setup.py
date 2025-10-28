@@ -65,6 +65,7 @@ if platform.system() == 'Windows':
             '/O2',
             '/DNDEBUG',
             '/DIS_64BIT',
+            '/DNNUE_EMBEDDING_OFF',  # Don't embed .nnue files
             '/DUSE_AVX2',
             '/arch:AVX2',
             '/DUSE_SSE41',
@@ -81,6 +82,7 @@ if platform.system() == 'Windows':
             '-O3',
             '-DNDEBUG',
             '-DIS_64BIT',
+            '-DNNUE_EMBEDDING_OFF',  # Don't embed .nnue files
             '-DUSE_PTHREADS',
             '-DUSE_AVX2',
             '-mavx2',
@@ -123,6 +125,7 @@ elif platform.system() == 'Darwin':
         '-O3',
         '-DNDEBUG',
         '-DIS_64BIT',
+        '-DNNUE_EMBEDDING_OFF',  # Don't embed .nnue files
         '-DUSE_PTHREADS',
         '-funroll-loops',
         '-mmacosx-version-min=10.15',
@@ -155,6 +158,7 @@ else:
         '-O3',
         '-DNDEBUG',
         '-DIS_64BIT',
+        '-DNNUE_EMBEDDING_OFF',  # Don't embed .nnue files
         '-DUSE_PTHREADS',
         '-DUSE_AVX2',
         '-mavx2',
@@ -197,15 +201,18 @@ ext_modules = [
 ]
 
 setup(
-    name='stockfish-nnue',
+    name='nnue-interface',
     version='0.1.0',
     author='Stockfish Contributors',
     description='Python bindings for Stockfish NNUE neural network',
     long_description='Extract NNUE activations and evaluations from Stockfish chess engine',
+    packages=['src'],
+    package_dir={'src': 'src'},
     ext_modules=ext_modules,
+    ext_package='src',
     install_requires=['pybind11>=2.6.0', 'numpy>=1.19.0'],
     setup_requires=['pybind11>=2.6.0'],
-    python_requires='>=3.7',
+    python_requires='>=3.8',
     zip_safe=False,
 )
 
