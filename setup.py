@@ -149,6 +149,9 @@ elif platform.system() == 'Darwin':
             '-msse',
             '-m64',
         ])
+    else:
+        # ARM64 - disable x86 SIMD to avoid intrinsic header errors
+        extra_compile_args.append('-DNO_PREFETCH')
     
     extra_link_args = ['-lpthread', '-mmacosx-version-min=10.15']
 else:
