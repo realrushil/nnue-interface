@@ -79,29 +79,45 @@ if platform.system() == 'Windows':
     extra_link_args = ['-lpthread']
 elif platform.system() == 'Darwin':
     # macOS-specific flags
+    # Detect if we're building for ARM64 (Apple Silicon)
+    import subprocess
+    try:
+        # Check if we're targeting ARM64
+        arch_output = subprocess.check_output(['uname', '-m'], text=True).strip()
+        is_arm64 = 'arm64' in arch_output or 'aarch64' in arch_output
+    except:
+        is_arm64 = False
+    
+    # Start with common flags
     extra_compile_args = [
         '-std=c++17',
         '-O3',
         '-DNDEBUG',
         '-DIS_64BIT',
         '-DUSE_PTHREADS',
-        '-DUSE_AVX2',
-        '-mavx2',
-        '-mbmi',
-        '-DUSE_SSE41',
-        '-msse4.1',
-        '-DUSE_SSSE3',
-        '-mssse3',
-        '-DUSE_SSE2',
-        '-msse2',
-        '-DUSE_POPCNT',
-        '-msse3',
-        '-mpopcnt',
-        '-msse',
-        '-m64',
         '-funroll-loops',
         '-mmacosx-version-min=10.15',
     ]
+    
+    # Only add x86 intrinsics for x86_64
+    if not is_arm64:
+        extra_compile_args.extend([
+            '-DUSE_AVX2',
+            '-mavx2',
+            '-mbmi',
+            '-DUSE_SSE41',
+            '-msse4.1',
+            '-DUSE_SSSE3',
+            '-mssse3',
+            '-DUSE_SSE2',
+            '-msse2',
+            '-DUSE_POPCNT',
+            '-msse3',
+            '-mpopcnt',
+            '-msse',
+            '-m64',
+        ])
+    
     extra_link_args = ['-lpthread', '-mmacosx-version-min=10.15']
 else:
     # Linux-specific flags
