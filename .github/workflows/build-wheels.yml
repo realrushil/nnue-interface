@@ -39,7 +39,7 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         pip install auditwheel
-        auditwheel repair dist/*.whl -w dist/
+        auditwheel repair dist/*.whl -w dist/ --plat manylinux_2_17_x86_64
         rm dist/*-linux_*.whl
 
     - name: Upload wheels
