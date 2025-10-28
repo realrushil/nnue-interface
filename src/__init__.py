@@ -8,7 +8,7 @@ from pathlib import Path
 import urllib.request
 import hashlib
 
-__version__ = "0.2.5"
+__version__ = "0.2.6"
 
 # NNUE file URLs and hashes
 NNUE_FILES = {
