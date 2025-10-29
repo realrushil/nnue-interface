@@ -205,10 +205,11 @@ ext_modules = [
 
 setup(
     name='nnue-interface',
-    version='0.2.6',
+    version='0.2.7',
     author='Rushil Saraf',
     description='Python bindings for Stockfish NNUE neural network',
-    long_description='Extract NNUE activations and evaluations from Stockfish chess engine',
+    long_description=open(os.path.join(os.path.dirname(__file__), 'README.md'), encoding='utf-8').read(),
+    long_description_content_type='text/markdown',
     packages=['nnue_interface'],
     package_dir={'nnue_interface': 'src'},
     ext_modules=ext_modules,
