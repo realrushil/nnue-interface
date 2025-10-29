@@ -167,15 +167,15 @@ get_activations_and_eval(const std::string& fen) {
         for (int p = 0; p < 2; ++p) {
             const int offset = (L1 / 2) * p;
             for (Eval::NNUE::IndexType i = 0; i < L1 / 2; ++i) {
-                // Clip and scale int16_t to uint8_t [0, 127]
+                // Clip and scale int16_t to uint8_t per Stockfish transformer: [0, 254] and /512
                 auto val0 = acc.accumulation[perspectives[p]][i];
                 auto val1 = acc.accumulation[perspectives[p]][i + L1 / 2];
                 
-                // Clamp to [0, 127]
-                val0 = std::max<std::int16_t>(0, std::min<std::int16_t>(127, val0));
-                val1 = std::max<std::int16_t>(0, std::min<std::int16_t>(127, val1));
+                // Clamp to [0, 254]
+                val0 = std::max<std::int16_t>(0, std::min<std::int16_t>(254, val0));
+                val1 = std::max<std::int16_t>(0, std::min<std::int16_t>(254, val1));
                 
-                transformedFeatures[offset + i] = static_cast<std::uint8_t>((val0 * val1) / 128);
+                transformedFeatures[offset + i] = static_cast<std::uint8_t>((static_cast<unsigned>(val0) * static_cast<unsigned>(val1)) / 512);
             }
         }
         
@@ -229,15 +229,15 @@ get_activations_and_eval(const std::string& fen) {
         for (int p = 0; p < 2; ++p) {
             const int offset = (L1 / 2) * p;
             for (Eval::NNUE::IndexType i = 0; i < L1 / 2; ++i) {
-                // Clip and scale int16_t to uint8_t [0, 127]
+                // Clip and scale int16_t to uint8_t per Stockfish transformer: [0, 254] and /512
                 auto val0 = acc.accumulation[perspectives[p]][i];
                 auto val1 = acc.accumulation[perspectives[p]][i + L1 / 2];
                 
-                // Clamp to [0, 127]
-                val0 = std::max<std::int16_t>(0, std::min<std::int16_t>(127, val0));
-                val1 = std::max<std::int16_t>(0, std::min<std::int16_t>(127, val1));
+                // Clamp to [0, 254]
+                val0 = std::max<std::int16_t>(0, std::min<std::int16_t>(254, val0));
+                val1 = std::max<std::int16_t>(0, std::min<std::int16_t>(254, val1));
                 
-                transformedFeatures[offset + i] = static_cast<std::uint8_t>((val0 * val1) / 128);
+                transformedFeatures[offset + i] = static_cast<std::uint8_t>((static_cast<unsigned>(val0) * static_cast<unsigned>(val1)) / 512);
             }
         }
         

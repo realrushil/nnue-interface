@@ -1,6 +1,6 @@
 # nnue-interface
 
-Python bindings for extracting Stockfish NNUE neural network activations and evaluations. Perfect for machine learning applications, chess analysis, and fine-tuning neural networks.
+Python bindings for extracting Stockfish NNUE neural network activations and evaluations.
 
 ## Features
 
@@ -184,14 +184,14 @@ All intermediate activations use int8/uint8 quantization for efficiency, convert
 
 ### Linux / macOS
 ```bash
-git clone https://github.com/yourusername/nnue-interface.git
+git clone https://github.com/realrushil/nnue-interface.git
 cd nnue-interface
 pip install -e .
 ```
 
 ### Windows (MSYS2 UCRT64)
 ```bash
-git clone https://github.com/yourusername/nnue-interface.git
+git clone https://github.com/realrushil/nnue-interface.git
 cd nnue-interface
 pip install -e .
 ```
