@@ -4,7 +4,7 @@ Python bindings for extracting Stockfish NNUE neural network activations and eva
 
 ## Features
 
-✨ **Key Capabilities:**
+**Key Capabilities:**
 - Extract NNUE **accumulator activations** (hidden layer 0): 3072 dimensions (Big network) or 128 dimensions (Small network)
 - Extract **intermediate layer activations** (layers 1-2): For deep network analysis
 - Extract **PSQT values**: Piece-square table contributions  
